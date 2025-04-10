@@ -5,22 +5,23 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github yanji-tech/rustica-compiler))
 
-(authors "Author Name")
+(authors "Yanji Tech")
 
-(maintainers "Maintainer Name")
+(maintainers "Yanji Tech Team")
 
-(license LICENSE)
+(license MulanPSL-2.0)
 
-(documentation https://url/to/documentation)
+(documentation https://github.com/yanji-tech/rustica-compiler/blob/main/README.md)
 
 (package
  (name rustica)
- (synopsis "A short synopsis")
- (description "A longer description")
+ (synopsis "Rustica Compiler")
+ (description "\
+The Rustica compiler is written in OCaml with Compiler-as-a-Server design \
+for web computing (web IDEs, serverless, edge computing).")
  (depends ocaml dune)
- (tags
-  (topics "to describe" your project)))
+ (tags (compiler)))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html
