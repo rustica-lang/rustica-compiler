@@ -17,8 +17,8 @@ and sort_expr =
   }
 
 and window_spec =
-  { order_by: sort_expr list
-  ; partition: expr list
+  { order_by : sort_expr list
+  ; partition : expr list
   }
 
 and str_interp_fragment =
@@ -35,6 +35,15 @@ and ptr =
 and name =
   | UnqualName of string
   | QualName of string * string
+
+and base_object_ref =
+  | ObjectRef of object_ref
+  | PseudoObjectRef of string
+
+and object_ref =
+  { name : string
+  ; module_ : string option
+  }
 
 and expr =
   | DetachedExpr of
@@ -77,6 +86,8 @@ and expr =
       ; elements : shape_element list
       ; allow_factoring : bool
       }
+  | Path of path
+  | Query of query
 
 and type_expr =
   | TypeOf of expr
@@ -91,7 +102,7 @@ and type_expr =
 
 and constant =
   | String of string
-  | Bytes of Lex_literal.bytes
+  | Bytes of bytes
   | Boolean of bool
   | Integer of string
   | Float of string
@@ -131,8 +142,8 @@ and shape_origin =
 
 and shape_element =
   { expr : path
-  ; elements: shape_element list option
-  ; compexpr : expr
+  ; elements : shape_element list option
+  ; compexpr : expr option
   ; cardinality : cardinality_modifier option
   ; required : bool option
   ; operation : shape_op
@@ -143,3 +154,69 @@ and shape_element =
   ; limit : expr option
   }
 
+and alias =
+  | AliasedExpr of
+      { alias : string
+      ; expr : expr
+      }
+  | ModuleAliasDecl of
+      { module_ : string
+      ; alias : string option
+      }
+
+and grouping_atom =
+  | GroupingObjectRef of object_ref
+  | GroupingPath of path
+  | GroupingIdentList of grouping_atom list
+
+and grouping_element =
+  | GroupingSimple of grouping_atom
+  | GroupingSets of grouping_element list
+  | GroupingOperation of
+      { oper : string
+      ; elements : grouping_atom list
+      }
+
+and query =
+  | SelectQuery of
+      { result_alias : string option
+      ; result : expr
+      ; where : expr option
+      ; orderby : sort_expr list option
+      ; offset : expr option
+      ; limit : expr option
+      ; rptr_passthrough : bool
+      ; implicit : bool
+      ; aliases : alias list option
+      }
+  | InsertQuery of
+      { subject : object_ref
+      ; shape : shape_element list
+      ; unless_conflict : (expr option * expr option) option
+      ; aliases : alias list option
+      }
+  | UpdateQuery of
+      { shape : shape_element list
+      ; subject : expr
+      ; where : expr option
+      ; sql_mode_link_only : bool
+      ; aliases : alias list option
+      }
+  | DeleteQuery of
+      { subject : expr
+      ; where : expr option
+      ; orderby : sort_expr list option
+      ; offset : expr option
+      ; limit : expr option
+      ; aliases : alias list option
+      }
+  | ForQuery of
+      { from_desugaring : bool
+      ; has_union : bool
+      ; optional : bool
+      ; iterator : expr
+      ; iterator_alias : string
+      ; result_alias : string option
+      ; result : expr
+      ; aliases : alias list option
+      }
