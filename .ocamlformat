@@ -1,0 +1,5 @@
+version = 0.27.0
+
+type-decl = sparse
+dock-collection-brackets = false
+break-separators = before
