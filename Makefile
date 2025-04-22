@@ -1,7 +1,10 @@
-.PHONY: build clean fmt
+.PHONY: build test clean fmt
 
 build:
 	dune build
+
+test:
+	dune runtest
 
 clean:
 	dune clean

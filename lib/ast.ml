@@ -7,8 +7,8 @@ and nones_order =
   | Last
 
 and cardinality_modifier =
-  | Optional
-  | Required
+  | One
+  | Many
 
 and sort_expr =
   { path : expr
@@ -88,6 +88,7 @@ and expr =
       }
   | Path of path
   | Query of query
+  | Constant of constant
 
 and type_expr =
   | TypeOf of expr
