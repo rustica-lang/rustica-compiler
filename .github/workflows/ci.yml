@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up OCaml
+      uses: ocaml/setup-ocaml@v3
+      with:
+        ocaml-compiler: "5.2.0"
+
+    - name: Opam dependencies
+      run: |
+        opam install -y dune ppx_deriving ppx_inline_test ppx_expect ocamlformat
+        opam install -y --deps-only ./
+
+    - name: Build
+      run:  opam exec -- dune build
+
+    - name: Run tests
+      run: opam exec -- dune runtest
